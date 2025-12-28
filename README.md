@@ -17,6 +17,14 @@ It is important that the baudrate of the ESP8266 is set to "115200 bit/s" (defau
 
 ![help.bmp](https://github.com/essszettt/espcmd/blob/main/doc/help.bmp)
 
+Return Values:
+
+- "no error"      => "OK" from ESP8266
+- "bad state"     => "ERROR" from ESP8266
+- "out of range"  => "FAIL" from ESP8266
+- "timeout error" => communication error with UART/ESP8266
+
+
 ---
 
 ### HISTORY
