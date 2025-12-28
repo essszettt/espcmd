@@ -9,7 +9,7 @@ Application to send AT-commands to ESP8266 on ZX Spectrum Next.
 
 It is important that the baudrate of the ESP8266 is set to "115200 bit/s" (default).
 
-![espcmd.bmp](https://github.com/essszettt/espcmd/blob/main/doc/espcmd.bmp)
+![usage.bmp](https://github.com/essszettt/espcmd/blob/main/doc/usage.bmp)
 
 ---
 
