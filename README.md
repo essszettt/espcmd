@@ -23,6 +23,7 @@ Return Values:
 - "bad state"     => "ERROR" from ESP8266
 - "out of range"  => "FAIL" from ESP8266
 - "timeout error" => communication error with UART/ESP8266
+- "invalid value" => error in command line
 
 
 ---
