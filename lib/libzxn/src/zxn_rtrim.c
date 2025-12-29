@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------+
 |                                                                              |
-| filename: zxn_trim.c                                                         |
+| filename: zxn_rtrim.c                                                        |
 | project:  ZX Spectrum Next - libzxn                                          |
 | author:   S. Zell                                                            |
 | date:     12/21/2025                                                         |
@@ -87,6 +87,8 @@ char_t* zxn_rtrim(char_t* acString)
 
     while (pEnd > acString)
     {
+      --pEnd;
+
       if (' ' >= *pEnd)
       {
         *pEnd = '\0';
@@ -95,38 +97,6 @@ char_t* zxn_rtrim(char_t* acString)
       {
         break;
       }
-
-      --pEnd;
-    }
-
-    return acString;
-  }
-
-  return 0;
-}
-
-
-/*----------------------------------------------------------------------------*/
-/* zxn_ltrim()                                                                */
-/*----------------------------------------------------------------------------*/
-char_t* zxn_ltrim(char_t* acString)
-{
-  if (acString)
-  {
-    char_t* pEnd = acString + strlen(acString);
-
-    while (pEnd > acString)
-    {
-      if (' ' >= *pEnd)
-      {
-        *pEnd = '\0';
-      }
-      else
-      {
-        break;
-      }
-
-      --pEnd;
     }
 
     return acString;
