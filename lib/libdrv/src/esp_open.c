@@ -92,7 +92,6 @@ uint8_t esp_open(esp_t* pState)
     uart_open(&pState->tUart, 0x00);
     uart_set_baudrate(&pState->tUart, uiESP_DEFAULT_BAUDRATE);
     uart_set_timeout(&pState->tUart, uiESP_DEFAULT_TIMEOUT);
-    uart_flush(&pState->tUart);
 
     pState->uiState = ESP_OPEN;
     return EOK;

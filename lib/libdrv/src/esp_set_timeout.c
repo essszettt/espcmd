@@ -1,19 +1,19 @@
 /*-----------------------------------------------------------------------------+
 |                                                                              |
-| filename: uart_set_timeout.c                                                 |
-| project:  ZX Spectrum Next - libuart                                         |
+| filename: esp_set_timeout.c                                                  |
+| project:  ZX Spectrum Next - libesp                                          |
 | author:   Stefan Zell                                                        |
-| date:     12/14/2025                                                         |
+| date:     12/31/2025                                                         |
 |                                                                              |
 +------------------------------------------------------------------------------+
 |                                                                              |
 | description:                                                                 |
 |                                                                              |
-| Driver for UART on ZX Spectrum Next                                          |
+| Driver for ESP8266 on ZX Spectrum Next                                       |
 |                                                                              |
 +------------------------------------------------------------------------------+
 |                                                                              |
-| Copyright (c) 12/14/2025 STZ Engineering                                     |
+| Copyright (c) 12/31/2025 STZ Engineering                                     |
 |                                                                              |
 | This software is provided  "as is",  without warranty of any kind, express   |
 | or implied. In no event shall STZ or its contributors be held liable for any |
@@ -40,6 +40,7 @@
 #include <errno.h>
 #include "libzxn.h"
 #include "libuart.h"
+#include "libesp.h"
 
 /*============================================================================*/
 /*                               Defines                                      */
@@ -78,17 +79,13 @@
 /*============================================================================*/
 
 /*----------------------------------------------------------------------------*/
-/* uart_set_timeout()                                                         */
+/* esp_set_timeout()                                                          */
 /*----------------------------------------------------------------------------*/
-uint8_t uart_set_timeout(uart_t* pState, uint16_t uiTimeout)
+uint8_t esp_set_timeout(esp_t* pState, uint16_t uiTimeout)
 {
-  if (pState && (UART_OPEN == pState->uiState))
+  if (pState && (ESP_OPEN == pState->uiState))
   {
-    pState->uiTimeout   = (uiTimeout ? uiTimeout : uiUART_DEFAULT_TIMEOUT);
-    pState->uiTimeout  *= 10;
-    pState->uiTimeout <<= zxn_getspeed();
-
-    return EOK;
+    return uart_set_timeout(&pState->tUart, uiTimeout);
   }
 
   return EINVAL;

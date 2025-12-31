@@ -155,13 +155,6 @@ Close a UART connection
 uint8_t uart_close(uart_t* pState);
 
 /*!
-Flush all enquened data from UART
-@param pState Pointer to device structure
-@return EOK = no error
-*/
-uint8_t uart_flush(uart_t* pState);
-
-/*!
 Set the current baudrate of the UART connection
 @param pState Pointer to device structure
 @param uiBaudrate Baudrate to set (default: 115200 bit/s)
@@ -175,7 +168,14 @@ Set the current timeout of the UART connection (in [ms])
 @param uiTimeout Timeout to set (default: 2000 ms)
 @return EOK = no error
 */
-uint8_t uart_set_timeout(uart_t* pState, uint32_t uiTimeout);
+uint8_t uart_set_timeout(uart_t* pState, uint16_t uiTimeout);
+
+/*!
+Flush all enquened data from UART
+@param pState Pointer to device structure
+@return EOK = no error
+*/
+uint8_t uart_flush(uart_t* pState);
 
 /*!
 Send one byte to UART

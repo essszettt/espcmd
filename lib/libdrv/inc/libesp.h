@@ -88,7 +88,7 @@ Default-timeout for communication with ESP8266: 2000 ms
 /*                               Typ-Definitionen                             */
 /*============================================================================*/
 /*!
-This enumeration describes all states of a UART connection
+This enumeration describes all states of a ESP session
 */
 enum
 {
@@ -97,46 +97,72 @@ enum
 }; 
 
 /*!
-Structure to describe a ESP8266 connection
+Structure to describe a ESP8266 connection/session
 */
 typedef struct _esp
 {
+  /*!
+  State of the current session
+  */
   uint8_t uiState;
+
+  /*!
+  Device structure of the UART
+  */
   uart_t tUart;
 
+  /*!
+  Last received character
+  */
   uint8_t uiPrev;
+
+  /*!
+  Newest received character
+  */
   uint8_t uiCurr;
+
+  /*!
+  Pointer of the end of the buffer while receiving data.
+  */
   const char_t* acEnd;
+
+  /*!
+  Pointer to the position of the next character while receiving data.
+  */
   char_t* acIndex;
 
 } esp_t;
 
+/*!
+This enumeration describes all values/states that can be returned by
+"esp_receive_ex".
+*/
 enum
 {
   /*!
   Data line received; further lines available
   */
-  ESP_LINE_DATA  = 0,
+  ESP_LINE_DATA = 0,
 
   /*!
   "OK" received; last line
   */
-  ESP_LINE_OK    = 1,
+  ESP_LINE_OK,
 
   /*!
   "ERROR" received; last line
   */
-  ESP_LINE_ERROR = 2,
+  ESP_LINE_ERROR,
 
   /*!
   "FAIL" received; last line
   */
-  ESP_LINE_FAIL  = 3,
+  ESP_LINE_FAIL,
 
   /*!
   Low level error accessing ESP8266
   */
-  ESP_LINE_FATAL = 4
+  ESP_LINE_FATAL
 };
 
 /*============================================================================*/
@@ -155,6 +181,29 @@ Close connection to ESP8266
 @return EOK = no error
 */
 uint8_t esp_close(esp_t* pState);
+
+/*!
+Set the current baudrate of the UART connection
+@param pState Pointer to device structure
+@param uiBaudrate Baudrate to set (default: 115200 bit/s)
+@return EOK = no error
+*/
+uint8_t esp_set_baudrate(esp_t* pState, uint32_t uiBaudrate);
+
+/*!
+Set the current timeout of the UART connection (in [ms])
+@param pState Pointer to device structure
+@param uiTimeout Timeout to set (default: 2000 ms)
+@return EOK = no error
+*/
+uint8_t esp_set_timeout(esp_t* pState, uint16_t uiTimeout);
+
+/*!
+Flush all enquened data from ESP8266
+@param pState Pointer to device structure
+@return EOK = no error
+*/
+uint8_t esp_flush(esp_t* pState);
 
 /*!
 Sending a AT-command to ESP8266. The command must be terminated with CR+LF.
