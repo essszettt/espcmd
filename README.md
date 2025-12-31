@@ -33,3 +33,4 @@ Return Values:
 - 0.0.3  First public release to test
 - 0.1.0  First official release
 - 0.1.1  Fixed bug in timeout detection
+- 0.2.0  Added options to set baudrate and timeout
