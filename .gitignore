@@ -9,3 +9,9 @@ lib/libzxn/build/zxn_pixelad.o
 lib/libzxn/build/zxn_radastan_mode.o
 lib/libzxn/build/zxn_rtrim.o
 lib/libzxn/build/zxn_sleep_ms.o
+lib/libzxn/build/zxn_cls.o
+lib/libzxn/build/zxn_msb8.o
+lib/libzxn/build/zxn_msb16.o
+lib/libzxn/build/zxn_msb32.o
+lib/libzxn/build/zxn_reset.o
+lib/libzxn/build/zxn_version.o
