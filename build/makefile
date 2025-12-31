@@ -30,8 +30,14 @@ BLD_DIR = .
 ### Source Files #######################
 SRCS := $(wildcard $(SRC_DIR)/*.c)
 
+### INCLUDE Directories ################
+INCS := -I$(INC_DIR)
+INCS += -I$(LIB_DIR)/libdrv/inc
+INCS += -I$(LIB_DIR)/libzxn/inc
+
 ### Compiler Flags #####################
-CFLAGS := -compiler=sdcc --vc -clib=sdcc_iy -SO3 --opt-code-size -I$(INC_DIR) -I$(LIB_DIR)/libdrv/inc -I$(LIB_DIR)/libzxn/inc -pragma-include:$(INC_DIR)/zpragma.inc
+CFLAGS := -compiler=sdcc --vc -clib=sdcc_iy -SO3 --opt-code-size -pragma-include:$(INC_DIR)/zpragma.inc
+CFLAGS += $(INCS)
 
 # Select CRT
 CFLAGS += -startup=30
@@ -54,7 +60,9 @@ CFLAGS += --max-allocs-per-node200000
 endif
 
 ### Linker Flags #######################
-LDFLAGS := -L$(LIB_DIR)/libdrv/build -llibdrv -L$(LIB_DIR)/libzxn/build -llibzxn -subtype=$(APPTYPE) -Cz"--clean" -create-app -o $(BLD_DIR)/$(APPNAME)
+LDFLAGS := -subtype=$(APPTYPE) -Cz"--clean" -create-app -o $(BLD_DIR)/$(APPNAME)
+LDFLAGS += -L$(LIB_DIR)/libdrv/build -llibdrv
+LDFLAGS += -L$(LIB_DIR)/libzxn/build -llibzxn
 
 ifeq ($(BUILD), debug)
 # create map file

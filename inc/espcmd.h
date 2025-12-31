@@ -100,6 +100,16 @@ typedef struct _appstate
   bool bQuiet;
 
   /*!
+  Baudrate used for communication with ESP8266 (default: 115200 bit/s)
+  */
+  uint32_t uiBaudrate;
+
+  /*!
+  Timeout used for communication with ESP8266 (default: ~2000 ms)
+  */
+  uint16_t uiTimeout;
+
+  /*!
   Name of the host to ping
   */
   char_t acCmd[uiMAX_LEN_CMD];

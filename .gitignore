@@ -31,3 +31,6 @@ lib/libdrv/build/uart_set_baudrate.o
 lib/libdrv/build/uart_set_timeout.o
 lib/libdrv/build/uart_tx_block.o
 lib/libdrv/build/uart_tx_byte.o
+lib/libdrv/build/esp_flush.o
+lib/libdrv/build/esp_set_baudrate.o
+lib/libdrv/build/esp_set_timeout.o

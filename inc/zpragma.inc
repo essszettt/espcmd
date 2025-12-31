@@ -1,6 +1,10 @@
 // limit the size of printf
-// #pragma printf = "%s %c %d %u"
+
+// Required for RELEASE-builds
 #pragma printf = "%s %d %u"
+
+// Required for DEBUG-builds
+// #pragma printf = "%s %d %u %lu"
 
 // limit the size of scanf
 // #pragma scanf = "%u"

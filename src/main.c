@@ -142,11 +142,13 @@ void _construct(void)
 {
   if (!g_tState.bInitialized)
   {
-    g_tState.eAction   = ACTION_NONE;
-    g_tState.bQuiet    = false;
-    g_tState.acCmd[0]  = '\0';
-    g_tState.uiSpeed   = zxn_getspeed();
-    g_tState.iExitCode = EOK;
+    g_tState.eAction    = ACTION_NONE;
+    g_tState.bQuiet     = false;
+    g_tState.uiBaudrate = uiESP_DEFAULT_BAUDRATE;
+    g_tState.uiTimeout  = uiESP_DEFAULT_TIMEOUT;
+    g_tState.acCmd[0]   = '\0';
+    g_tState.uiSpeed    = zxn_getspeed();
+    g_tState.iExitCode  = EOK;
 
     zxn_setspeed(RTM_28MHZ);
     esp_open(&g_tState.tEsp);
@@ -260,6 +262,32 @@ int parseArguments(int argc, char* argv[])
       {
         g_tState.bQuiet = true;
       }
+      else if ((0 == strcmp(acArg, "-b")) || (0 == stricmp(acArg, "--baudrate")))
+      {
+        if ((i + 1) < argc)
+        {
+          g_tState.uiBaudrate = strtoul(argv[++i], 0, 0);
+        }
+        else
+        {
+          app_printf(stderr, "option %s requires a value\n", acArg);
+          iReturn = EINVAL;
+          break;
+        }
+      }
+      else if ((0 == strcmp(acArg, "-t")) || (0 == stricmp(acArg, "--timeout")))
+      {
+        if ((i + 1) < argc)
+        {
+          g_tState.uiTimeout = strtoul(argv[++i], 0, 0);
+        }
+        else
+        {
+          app_printf(stderr, "option %s requires a value\n", acArg);
+          iReturn = EINVAL;
+          break;
+        }
+      }
       else
       {
         app_printf(stderr, "unknown option: %s\n", acArg);
@@ -300,8 +328,10 @@ int parseArguments(int argc, char* argv[])
     }
   }
 
-  DBGPRINTF("parseargs() - action  = %d\n", g_tState.eAction);
-  DBGPRINTF("parseargs() - command = %s\n", g_tState.acCmd);
+  DBGPRINTF("parseargs() - action   = %d\n", g_tState.eAction);
+  DBGPRINTF("parseargs() - command  = %s\n", g_tState.acCmd);
+  DBGPRINTF("parseargs() - baudrate = %lu\n", g_tState.uiBaudrate);
+  DBGPRINTF("parseargs() - timeout  = %u\n", g_tState.uiTimeout);
 
   return iReturn;
 }
@@ -318,9 +348,11 @@ int showHelp(void)
 
   app_printf(stdout, "%s\n\n", VER_FILEDESCRIPTION_STR);
 
-  app_printf(stdout, "%s command [-q][-h][-v]\n\n", acAppName);
+  app_printf(stdout, "%s cmd [-b x][-t x][-q][-h|-v]\n\n", acAppName);
   //                  0.........1.........2.........3.
-  app_printf(stdout, " command     command to execute\n");
+  app_printf(stdout, " cmd         command to execute\n");
+  app_printf(stdout, " -b[audrate] baudrate in [bit/s]\n");
+  app_printf(stdout, " -t[imeout]  timeout in [ms]\n");
   app_printf(stdout, " -q[uiet]    no screen output\n");
   app_printf(stdout, " -h[elp]     print this help\n");
   app_printf(stdout, " -v[ersion]  print version info\n");
@@ -368,9 +400,27 @@ int command(void)
 {
   int iReturn = EOK;
 
+  /* Initialize UART / ESP8266 */
+  if (EOK != esp_set_baudrate(&g_tState.tEsp, g_tState.uiBaudrate))
+  {
+    iReturn = ENOTSUP;
+    goto EXIT_COMMAND;
+  }
+
+  if (EOK != esp_set_timeout(&g_tState.tEsp, g_tState.uiTimeout))
+  {
+    iReturn = ENOTSUP;
+    goto EXIT_COMMAND;
+  }
+
+  if (EOK != esp_flush(&g_tState.tEsp))
+  {
+    iReturn = ENOTSUP;
+    goto EXIT_COMMAND;
+  }
+
   /* Create request */
   snprintf(g_tState.esp.acTxBuffer, sizeof(g_tState.esp.acTxBuffer), "%s\r\n", g_tState.acCmd);
-
   app_printf(stdout, "> %s\n", g_tState.acCmd);
 
   /* Send request to ESP8266 */
@@ -390,28 +440,28 @@ int command(void)
 
         case ESP_LINE_OK:
           iReturn = EOK;
-          goto EXIT_LOOP;
+          goto EXIT_COMMAND;
 
         case ESP_LINE_ERROR:
           iReturn = ESTAT;
-          goto EXIT_LOOP;
+          goto EXIT_COMMAND;
 
         case ESP_LINE_FAIL:
           iReturn = ERANGE;
-          goto EXIT_LOOP;
+          goto EXIT_COMMAND;
 
         default:
           iReturn = ETIMEOUT;
-          goto EXIT_LOOP;
+          goto EXIT_COMMAND;
       }
     }
-
-    EXIT_LOOP:
   }
   else
   {
     iReturn = ENOTSUP;
   }
+
+EXIT_COMMAND:
 
   return iReturn;
 }
