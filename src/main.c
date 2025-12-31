@@ -46,8 +46,8 @@
 #include <errno.h>
 
 #include "libzxn.h"
-#include "uart.h"
-#include "esp.h"
+#include "libuart.h"
+#include "libesp.h"
 #include "espcmd.h"
 #include "version.h"
 
@@ -378,7 +378,7 @@ int command(void)
   {
     for ( ; ; )
     {
-      switch (esp_receive_line(&g_tState.tEsp, g_tState.esp.acRxBuffer, sizeof(g_tState.esp.acRxBuffer)))
+      switch (esp_receive_ex(&g_tState.tEsp, g_tState.esp.acRxBuffer, sizeof(g_tState.esp.acRxBuffer)))
       {
         case ESP_LINE_DATA:
           zxn_rtrim(g_tState.esp.acRxBuffer);
@@ -410,7 +410,7 @@ int command(void)
   }
   else
   {
-    iReturn = EBREAK;
+    iReturn = ENOTSUP;
   }
 
   return iReturn;
