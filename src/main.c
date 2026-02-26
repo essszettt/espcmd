@@ -44,6 +44,8 @@
 #include <stdarg.h>
 #include <string.h>
 #include <errno.h>
+#include <arch/zxn.h>
+#include <arch/zxn/esxdos.h>
 
 #include "libzxn.h"
 #include "libuart.h"
